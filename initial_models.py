@@ -40,9 +40,9 @@ def accuracy_scores(models):
         precision.append(round(precision_score(y_test, y_pred),4))
         f1Score.append(round(f1_score(y_test, y_pred),4))
         tp.append(cm[1,1])
-        fp.append(cm[0,1])
+        fp.append(cm[1,0])
         tn.append(cm[0,0])
-        fn.append(cm[1,0])
+        fn.append(cm[0,1])
         train_time.append(end_time - start_time)
     
     return accuracy, recall, precision, f1Score, train_time, cross_val_acc, cross_val_std, tp, fp, tn, fn
