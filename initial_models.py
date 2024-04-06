@@ -1,4 +1,5 @@
 import pandas as pd
+from datetime import datetime
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression, Perceptron
@@ -18,14 +19,19 @@ def accuracy_scores(models):
     f1Score = []
     train_time = []
     conf_matrix = []
+    tp = []
+    fp = []
+    tn = []
+    fn = []
     
     for model in models:
-        start_time = pd.datetime.now()
+        start_time = datetime.now()
         model.fit(X_train, y_train)
-        end_time = pd.datetime.now()
+        end_time = datetime.now()
         
         y_pred = model.predict(X_test)
         cross_score = cross_val_score(model, X_train, y_train, scoring='accuracy', cv=10)
+        cm = confusion_matrix(y_test, y_pred)
         
         cross_val_acc.append(round(cross_score.mean(),4))
         cross_val_std.append(round(cross_score.std(),6))
@@ -33,10 +39,13 @@ def accuracy_scores(models):
         recall.append(round(recall_score(y_test, y_pred),4))
         precision.append(round(precision_score(y_test, y_pred),4))
         f1Score.append(round(f1_score(y_test, y_pred),4))
-        conf_matrix.append(confusion_matrix(y_test, y_pred))
+        tp.append(cm[1,1])
+        fp.append(cm[0,1])
+        tn.append(cm[0,0])
+        fn.append(cm[1,0])
         train_time.append(end_time - start_time)
     
-    return accuracy, recall, precision, f1Score, train_time, conf_matrix, cross_val_acc, cross_val_std
+    return accuracy, recall, precision, f1Score, train_time, cross_val_acc, cross_val_std, tp, fp, tn, fn
 
 
 data = pd.read_csv('Data/data_cleaned.csv')
@@ -68,103 +77,47 @@ sc = StandardScaler()
 X_train = sc.fit_transform(X_train)
 X_test = sc.transform(X_test)
 
+
+
 # Logistic Regression
-classifier = LogisticRegression()
-classifier.fit(X_train, y_train)
-y_pred = classifier.predict(sc.transform(X_test))
-cross_val = cross_val_score(classifier, X_train, y_train, scoring='accuracy', cv=10)
-print('\nAvg Cross Val Score: ', cross_val.mean())
-print('Cross Val Std: ', cross_val.std())
-print('Accuracy score: ', accuracy_score(y_test, y_pred))
-print('Recall score: ', recall_score(y_test, y_pred))
-print('Precision score: ', precision_score(y_test, y_pred))
-print('F1 score: ', f1_score(y_test, y_pred))
-print('Confusion Matrix: \n', confusion_matrix(y_test, y_pred))
-
-
-# Just the standard logistic regression model without tuning or
-# dimentionality reduction is giving an accuracy of 90.5%
+lr = LogisticRegression()
 
 # Perceptron
-classifier = Perceptron(alpha = 0.01)
-classifier.fit(X_train, y_train)
-y_pred = classifier.predict(sc.transform(X_test))
-cross_val = cross_val_score(classifier, X_train, y_train, scoring='accuracy', cv=10)
-print('\nAvg Cross Val Score: ', cross_val.mean())
-print('Cross Val Std: ', cross_val.std())
-print('Accuracy score: ', accuracy_score(y_test, y_pred))
-print('Recall score: ', recall_score(y_test, y_pred))
-print('Precision score: ', precision_score(y_test, y_pred))
-print('F1 score: ', f1_score(y_test, y_pred))
-print('Confusion Matrix: \n', confusion_matrix(y_test, y_pred))
-# Mind-blowing 98.9% accuracy
+percept = Perceptron(alpha = 0.01)
 
 # SVM
-classifier = SVC(kernel='rbf')
-classifier.fit(X_train, y_train)
-y_pred = classifier.predict(sc.transform(X_test))
-cross_val = cross_val_score(classifier, X_train, y_train, scoring='accuracy', cv=10)
-print('\nAvg Cross Val Score: ', cross_val.mean())
-print('Cross Val Std: ', cross_val.std())
-print('Accuracy score: ', accuracy_score(y_test, y_pred))
-print('Recall score: ', recall_score(y_test, y_pred))
-print('Precision score: ', precision_score(y_test, y_pred))
-print('F1 score: ', f1_score(y_test, y_pred))
-print('Confusion Matrix: \n', confusion_matrix(y_test, y_pred))
-# Wow SVC did terribly 47.1%
+svc = SVC(kernel='rbf')
 
 # K Nearest Neighbors
-classifier = KNeighborsClassifier(n_neighbors=5, algorithm='auto',metric='minkowski', n_jobs=-1)
-classifier.fit(X_train, y_train)
-y_pred = classifier.predict(sc.transform(X_test))
-cross_val = cross_val_score(classifier, X_train, y_train, scoring='accuracy', cv=10)
-print('\nAvg Cross Val Score: ', cross_val.mean())
-print('Cross Val Std: ', cross_val.std())
-print('Accuracy score: ', accuracy_score(y_test, y_pred))
-print('Recall score: ', recall_score(y_test, y_pred))
-print('Precision score: ', precision_score(y_test, y_pred))
-print('F1 score: ', f1_score(y_test, y_pred))
-print('Confusion Matrix: \n', confusion_matrix(y_test, y_pred))
-# 98.8% accuracy
+knn = KNeighborsClassifier(n_neighbors=5, algorithm='auto',metric='minkowski', n_jobs=-1)
 
 # Decision Trees
-classifier = DecisionTreeClassifier(criterion='gini', random_state=0)
-classifier.fit(X_train, y_train)
-y_pred = classifier.predict(sc.transform(X_test))
-cross_val = cross_val_score(classifier, X_train, y_train, scoring='accuracy', cv=10)
-print('\nAvg Cross Val Score: ', cross_val.mean())
-print('Cross Val Std: ', cross_val.std())
-print('Accuracy score: ', accuracy_score(y_test, y_pred))
-print('Recall score: ', recall_score(y_test, y_pred))
-print('Precision score: ', precision_score(y_test, y_pred))
-print('F1 score: ', f1_score(y_test, y_pred))
-print('Confusion Matrix: \n', confusion_matrix(y_test, y_pred))
-# Terrible accuracy 65.4%
+dt = DecisionTreeClassifier(criterion='gini', random_state=0)
 
 # Random Forrest
-classifier = RandomForestClassifier(n_estimators = 100, criterion='gini', n_jobs=-1, random_state=0)
-classifier.fit(X_train, y_train)
-y_pred = classifier.predict(sc.transform(X_test))
-cross_val = cross_val_score(classifier, X_train, y_train, scoring='accuracy', cv=10)
-print('\nAvg Cross Val Score: ', cross_val.mean())
-print('Cross Val Std: ', cross_val.std())
-print('Accuracy score: ', accuracy_score(y_test, y_pred))
-print('Recall score: ', recall_score(y_test, y_pred))
-print('Precision score: ', precision_score(y_test, y_pred))
-print('F1 score: ', f1_score(y_test, y_pred))
-print('Confusion Matrix: \n', confusion_matrix(y_test, y_pred))
-# Amazing accuracy of 98.7%
+rf = RandomForestClassifier(n_estimators = 100, criterion='gini', n_jobs=-1, random_state=0)
 
 # Gradient Boosting Classifier
-classifier = GradientBoostingClassifier(loss='log_loss',learning_rate=0.1, n_estimators=100, random_state=0)
-classifier.fit(X_train, y_train)
-y_pred = classifier.predict(sc.transform(X_test))
-cross_val = cross_val_score(classifier, X_train, y_train, scoring='accuracy', cv=10)
-print('\nAvg Cross Val Score: ', cross_val.mean())
-print('Cross Val Std: ', cross_val.std())
-print('Accuracy score: ', accuracy_score(y_test, y_pred))
-print('Recall score: ', recall_score(y_test, y_pred))
-print('Precision score: ', precision_score(y_test, y_pred))
-print('F1 score: ', f1_score(y_test, y_pred))
-print('Confusion Matrix: \n', confusion_matrix(y_test, y_pred))
-# 98.8 accuracy
+gbc = GradientBoostingClassifier(loss='log_loss',learning_rate=0.1, n_estimators=100, random_state=0)
+
+
+# training all models and getting their metric scores
+models = [lr, percept, svc, knn, dt, rf, gbc]
+model_names = ['Logistic Regression','Perceptron','SVC','KNN','Decision Trees','Random Forest','Gradient Boosting Classifier']
+accuracy, recall, precision, f1Score, train_time, cross_val_acc, cross_val_std, tp, fp, tn, fn = accuracy_scores(models)
+accuracy_matrix = pd.DataFrame({
+    'Accuracy':accuracy,
+    'Recall':recall,
+    'Precision':precision,
+    'F1 Score':f1Score,
+    'Cross Validation Accuracy':cross_val_acc,
+    'Cross Validation Std':cross_val_std,
+    'True Positive':tp,
+    'False Positive':fp,
+    'True Negative':tn,
+    'False Negative':fn,
+    'Training Time':train_time},index=model_names)
+
+data.to_csv('Data/data_preprocessed.csv', index=False)
+accuracy_matrix.to_csv('Data/accuracy_scores_initial_models.csv')
+
