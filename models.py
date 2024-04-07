@@ -12,7 +12,7 @@ from sklearn.decomposition import PCA
 
 
 def accuracy_scores(models, X_train, X_test):
-    cross_val_acc = []
+    cross_val_recall = []
     cross_val_std = []
     accuracy = []
     recall = []
@@ -37,10 +37,10 @@ def accuracy_scores(models, X_train, X_test):
         end_time = datetime.now()
         
         y_pred = model.predict(X_test)
-        cross_score = cross_val_score(model, X_train, y_train, scoring='accuracy', cv=10)
+        cross_score = cross_val_score(model, X_train, y_train, scoring='recall', cv=10)
         cm = confusion_matrix(y_test, y_pred)
         
-        cross_val_acc.append(round(cross_score.mean(),4))
+        cross_val_recall.append(round(cross_score.mean(),4))
         cross_val_std.append(round(cross_score.std(),6))
         accuracy.append(round(accuracy_score(y_test, y_pred),4))
         recall.append(round(recall_score(y_test, y_pred),4))
@@ -52,7 +52,7 @@ def accuracy_scores(models, X_train, X_test):
         fn.append(cm[1,0])
         train_time.append(end_time - start_time)
     
-    return accuracy, recall, precision, f1Score, train_time, cross_val_acc, cross_val_std, tp, fp, tn, fn
+    return accuracy, recall, precision, f1Score, train_time, cross_val_recall, cross_val_std, tp, fp, tn, fn
 
 
 data = pd.read_csv('Data/data_cleaned.csv')
@@ -85,8 +85,6 @@ data = pd.concat([majority_downsampled, minority_class])
 
 # Shuffle the dataset
 data = data.sample(frac=1, random_state=42).reset_index(drop=True)
-
-# Applying PCA
 
 # X and y arrays
 X = data.drop(['fraud'], axis=1).values
@@ -129,13 +127,13 @@ gbc = GradientBoostingClassifier(loss='log_loss',learning_rate=0.1, n_estimators
 # training all models and getting their metric scores
 models = [lr, percept, svc, knn, dt, rf, gbc]
 model_names = ['Logistic Regression','Perceptron','SVC','KNN','Decision Trees','Random Forest','Gradient Boosting Classifier']
-accuracy, recall, precision, f1Score, train_time, cross_val_acc, cross_val_std, tp, fp, tn, fn = accuracy_scores(models, X_train, X_test)
+accuracy, recall, precision, f1Score, train_time, cross_val_recall, cross_val_std, tp, fp, tn, fn = accuracy_scores(models, X_train, X_test)
 accuracy_matrix = pd.DataFrame({
     'Accuracy':accuracy,
     'Recall':recall,
     'Precision':precision,
     'F1 Score':f1Score,
-    'Cross Validation Accuracy':cross_val_acc,
+    'Cross Validation Recall':cross_val_recall,
     'Cross Validation Std':cross_val_std,
     'True Positive':tp,
     'False Positive':fp,
