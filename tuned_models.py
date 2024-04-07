@@ -106,7 +106,7 @@ print("Best Recall: {:.2f} %".format(best_recall_svc*100))
 print("Best Parameters:", best_parameters_svc)
 
 
-################################### PRODUCTIONIZING THE MODEL ###################################
+################################### EXPORTING THE MODEL ###################################
 
 import pickle
 model_file = "FlaskAPI/Models/model_file.p"
