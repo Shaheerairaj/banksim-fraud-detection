@@ -13,22 +13,31 @@ This project aims to detect fraudulent activities using the BankSim dataset prov
 - Highest amount of frauds occur if the transaction category is Sports
 - Transaction amount has the highest correlation to fraud (49% correlation)
 
+![alt text](image.png)                      ![alt text](image-1.png)
+
+
+
+![alt text](image-2.png)
+
+
+
 # Initial Model Building
-- Below are the performances of models without tuning or PCA.
-- I decided to go with recall as my main measure of performance.
-- The reason for this is because recall measures how accurately our model was able to correctly detect frauds out of all frauds that exist in the test dataset.
-- It is far more useful in my opinion for a bank to correctly detect all frauds and not too big of a deal if a few false positives were detected in the process.
-- But I've also included precision just to see how well our model predicts the non-fraudulent cases.
+Below are the performances of models without tuning or PCA.
+I decided to go with recall as my main measure of performance.
+The reason for this is because recall measures how accurately our model was able to correctly detect frauds out of all frauds that exist in the test dataset.
+It is far more useful in my opinion for a bank to correctly detect all frauds and not too big of a deal if a few false positives were detected in the process.
+But I've also included precision just to see how well our model predicts the non-fraudulent cases.
 
 ## Initial Model Performance
-Model | Recall | Precision
-Logistic Regression | 0.606 | 0.8971
-Perceptron | 0.5541 | 0.8699
-SVC | 0.5927 | 0.9336
-KNN | 0.6257 | 0.8693
-Decision Trees | 0.6664 | 0.64877
-Random Forest | 0.6404 | 0.8476
-Gradient Boosting Classifier | 0.6531  0.8824
+|         Model       | Recall | Precision |
+|---------------------|--------|-----------|
+| Logistic Regression | 0.6060 |   0.8971  |
+|     Perceptron      | 0.5541 |   0.8699  |
+|         SVC         | 0.5927 |   0.9336  |
+|         KNN         | 0.6257 |   0.8693  |
+|   Decision Trees    | 0.6664 |   0.6487  |
+|    Random Forest    | 0.6404 |   0.8476  |
+|  Gradient Boosting  | 0.6531 |   0.8824  |
 
 As you can see, none of these models were particularly impressive.
 
@@ -40,8 +49,12 @@ After this, I performed the following:
 
 ## Model Improvements
 
-Model | Recall | Recall Improvement | Precision | Precision Improvement
-Logistic Regression | 0.9953 | 64.2%
+|        Model        | Recall | Recall Improvement | Precision | Precision Improvement |
+| Logistic Regression | 0.9953 |        64.2%       |   0.919   |          2.4%         |
+|       Perceptron    | 0.9860 |        77.9%       |   0.913   |          4.9%         |
+|         SVC         | 1.0000 |        68.7%       |   0.911   |         -2.4%         |
+
+
 
 
 
