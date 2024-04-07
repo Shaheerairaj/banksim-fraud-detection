@@ -8,9 +8,10 @@ from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.decomposition import PCA
 
 
-def accuracy_scores(models):
+def accuracy_scores(models, X_train, X_test):
     cross_val_acc = []
     cross_val_std = []
     accuracy = []
@@ -25,6 +26,12 @@ def accuracy_scores(models):
     fn = []
     
     for model in models:
+        # Applying PCA
+        pca = PCA(n_components=4)
+        X_train = pca.fit_transform(X_train)
+        X_test = pca.transform(X_test)
+        
+        # Training model
         start_time = datetime.now()
         model.fit(X_train, y_train)
         end_time = datetime.now()
@@ -79,6 +86,8 @@ data = pd.concat([majority_downsampled, minority_class])
 # Shuffle the dataset
 data = data.sample(frac=1, random_state=42).reset_index(drop=True)
 
+# Applying PCA
+
 # X and y arrays
 X = data.drop(['fraud'], axis=1).values
 y = data['fraud'].values
@@ -92,6 +101,8 @@ X_train = sc.fit_transform(X_train)
 X_test = sc.transform(X_test)
 
 
+
+################################ MODELS ################################
 
 # Logistic Regression
 lr = LogisticRegression()
@@ -118,7 +129,7 @@ gbc = GradientBoostingClassifier(loss='log_loss',learning_rate=0.1, n_estimators
 # training all models and getting their metric scores
 models = [lr, percept, svc, knn, dt, rf, gbc]
 model_names = ['Logistic Regression','Perceptron','SVC','KNN','Decision Trees','Random Forest','Gradient Boosting Classifier']
-accuracy, recall, precision, f1Score, train_time, cross_val_acc, cross_val_std, tp, fp, tn, fn = accuracy_scores(models)
+accuracy, recall, precision, f1Score, train_time, cross_val_acc, cross_val_std, tp, fp, tn, fn = accuracy_scores(models, X_train, X_test)
 accuracy_matrix = pd.DataFrame({
     'Accuracy':accuracy,
     'Recall':recall,
@@ -132,6 +143,6 @@ accuracy_matrix = pd.DataFrame({
     'False Negative':fn,
     'Training Time':train_time},index=model_names)
 
-# data.to_csv('Data/data_preprocessed.csv', index=False)
-accuracy_matrix.to_csv('Data/accuracy_scores_downsampled_models.csv')
+data.to_csv('Data/data_preprocessed.csv', index=False)
+accuracy_matrix.to_csv('Data/accuracy_scores_downsampled_pca_models.csv')
 
