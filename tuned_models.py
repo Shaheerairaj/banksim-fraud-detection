@@ -109,7 +109,7 @@ print("Best Parameters:", best_parameters_svc)
 ################################### PRODUCTIONIZING THE MODEL ###################################
 
 import pickle
-model_file = "FlaskAPI/models/model_file.p"
+model_file = "FlaskAPI/Models/model_file.p"
 with open(model_file, 'wb') as file:
     pickle.dump({'model': grid_search.best_estimator_, 'scaler': sc}, file)
 
