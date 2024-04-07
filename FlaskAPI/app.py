@@ -24,7 +24,7 @@ def index():
         gender = 0 if gender == 'M' else 1
         if category == 'Sports':
             user_input = np.array([step,age,gender,amount,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
-        elif category == 'Media Contents':
+        elif category == 'Media Content':
             user_input = np.array([step,age,gender,amount,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0])
         elif category == 'Fashion':
             user_input = np.array([step,age,gender,amount,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0])
