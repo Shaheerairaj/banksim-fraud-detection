@@ -50,6 +50,7 @@ After this, I performed the following:
 ## Model Improvements
 
 |        Model        | Recall | Recall Improvement | Precision | Precision Improvement |
+|---------------------|--------|--------------------|-----------|-----------------------|
 | Logistic Regression | 0.9953 |        64.2%       |   0.919   |          2.4%         |
 |       Perceptron    | 0.9860 |        77.9%       |   0.913   |          4.9%         |
 |         SVC         | 1.0000 |        68.7%       |   0.911   |         -2.4%         |
