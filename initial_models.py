@@ -65,9 +65,23 @@ data.drop(['customer','merchant'], axis=1, inplace=True)
 data = pd.get_dummies(data, columns=['category'])
 data['gender'] = data['gender'].map({'M':0, 'F':1})
 
-# getting X and y variables
-y = data.iloc[:,4].values
+#Addressing data imbalance by downsampling
+# Separate majority and minority classes
+majority_class = data[data['fraud'] == 0]
+minority_class = data[data['fraud'] == 1]
+
+# Downsample majority class
+majority_downsampled = majority_class.sample(n=len(minority_class), random_state=42)
+
+# Combine minority class and downsampled majority class
+data = pd.concat([majority_downsampled, minority_class])
+
+# Shuffle the dataset
+data = data.sample(frac=1, random_state=42).reset_index(drop=True)
+
+# X and y arrays
 X = data.drop(['fraud'], axis=1).values
+y = data['fraud'].values
 
 # train test split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
@@ -118,6 +132,6 @@ accuracy_matrix = pd.DataFrame({
     'False Negative':fn,
     'Training Time':train_time},index=model_names)
 
-data.to_csv('Data/data_preprocessed.csv', index=False)
-accuracy_matrix.to_csv('Data/accuracy_scores_initial_models.csv')
+# data.to_csv('Data/data_preprocessed.csv', index=False)
+accuracy_matrix.to_csv('Data/accuracy_scores_downsampled_models.csv')
 
