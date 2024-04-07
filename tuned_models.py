@@ -104,3 +104,12 @@ best_recall_svc = grid_search.best_score_
 best_parameters_svc = grid_search.best_params_
 print("Best Recall: {:.2f} %".format(best_recall_svc*100))
 print("Best Parameters:", best_parameters_svc)
+
+
+################################### PRODUCTIONIZING THE MODEL ###################################
+
+import pickle
+model_file = "FlaskAPI/Models/model_file.p"
+with open(model_file, 'wb') as file:
+    pickle.dump({'model': grid_search.best_estimator_, 'scaler': sc}, file)
+
