@@ -13,13 +13,6 @@ This project aims to detect fraudulent activities using the BankSim dataset prov
 - Highest amount of frauds occur if the transaction category is Sports
 - Transaction amount has the highest correlation to fraud (49% correlation)
 
-![alt text](image.png)                      ![alt text](image-1.png)
-
-
-
-![alt text](image-2.png)
-
-
 
 # Initial Model Building
 Below are the performances of models without tuning or PCA.
@@ -47,7 +40,7 @@ After this, I performed the following:
 3. Selected the best 3 performing models for tuning (Logistic Regression, Perceptron and SVC)
 4. Tuned the hyper parameters using grid search and k cross validation (k=10)
 
-## Model Improvements
+## Tuned Model Performance
 
 |        Model        | Recall | Recall Improvement | Precision | Precision Improvement |
 |---------------------|--------|--------------------|-----------|-----------------------|
