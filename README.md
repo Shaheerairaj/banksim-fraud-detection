@@ -55,7 +55,17 @@ After this, I performed the following:
 
 
 
+# Model Deployment
+I used the FlaskAPI framework to develop a simple web application where I can ask the user to input the variables needed by the model and have the model give a fraud or not fraud prediction.
 
+## Inital Screen
+![alt text](image-1.png)
+
+## Output if Fraud
+![alt text](image.png)
+
+## Output if Not Fraud
+![alt text](image-2.png)
 
 
 # Resources Used:
