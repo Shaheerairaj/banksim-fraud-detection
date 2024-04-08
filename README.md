@@ -13,6 +13,11 @@ This project aims to detect fraudulent activities using the BankSim dataset prov
 - Highest amount of frauds occur if the transaction category is Sports
 - Transaction amount has the highest correlation to fraud (49% correlation)
 
+![alt text](amount-variable-skewness.png)                        ![alt text](corr-plot.png)
+
+
+![alt text](fraud-imbalance.png)
+
 
 # Initial Model Building
 Below are the performances of models without tuning or PCA.
