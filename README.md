@@ -62,7 +62,7 @@ I used the FlaskAPI framework to develop a simple web application where I can as
 ![alt text](image-1.png)
 
 ## Output if Fraud
-![alt text](image.png)
+![alt text](image-3.png)
 
 ## Output if Not Fraud
 ![alt text](image-2.png)
